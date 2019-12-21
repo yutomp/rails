@@ -55,8 +55,7 @@ class PasswordResetsTest < ActionDispatch::IntegrationTest
                             password_confirmation: "foobaz" } }
     assert is_logged_in?
     assert_not flash.empty?
-    assert_redirected_to 
-    assert_nil user.reload['reset_digest']
+    assert_redirected_to user
   end
 
   test "expired token" do
@@ -65,7 +64,7 @@ class PasswordResetsTest < ActionDispatch::IntegrationTest
 
     @user = assigns(:user)
     @user.update_attribute(:reset_sent_at, 3.hours.ago)
-    patch password_reset_path(@user.reset_tokne),
+    patch password_reset_path(@user.reset_token),
           params: { email: @user.email,
                     user: { password:   "foobar",
                             password_confirmation: "foobar" }}
